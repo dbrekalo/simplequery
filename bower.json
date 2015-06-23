@@ -1,0 +1,25 @@
+{
+  "name": "simplequery",
+  "version": "1.0.0",
+  "homepage": "https://github.com/dbrekalo/simplequery",
+  "authors": [
+    "Damir Brekalo <dbrekalo@gmail.com>"
+  ],
+  "description": "javascript library with api similar to jQuery",
+  "main": "dist/core.js",
+  "keywords": [
+    "js",
+    "simple",
+    "query",
+    "simplequery",
+    "jquery"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
