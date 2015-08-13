@@ -18,7 +18,7 @@ requires browser features: 'addEventListener' in el, 'removeEventListener' in el
 
             if (!parent) { return; }
 
-            while (parent.nodeType === 1 && parent !== containment) {
+            while (parent && parent.nodeType === 1 && parent !== containment) {
 
                 if ($.matches(parent, selector)) {
                     matchingNode = parent;

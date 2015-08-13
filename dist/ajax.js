@@ -113,7 +113,7 @@ requires browser features: 'XMLHttpRequest' in window
 
         serializeArray: function() {
 
-            return $.map(this.find('input, textarea').nodes, function(el) {
+            return $.map(this.find('input, textarea, select').nodes, function(el) {
 
                 if (el.type === 'radio' || el.type === 'checkbox') {
 

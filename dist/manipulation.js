@@ -58,7 +58,7 @@ Manipulation module
 
             return this.each(function() {
 
-                this.parentNode.removeChild(this);
+                this.parentNode && this.parentNode.removeChild(this);
 
             });
 
