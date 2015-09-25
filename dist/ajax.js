@@ -113,9 +113,13 @@ requires browser features: 'XMLHttpRequest' in window
 
         serializeArray: function() {
 
-            return $.map(this.find('input, textarea, select').nodes, function(el) {
+            return $.map(this[this.is('form') ? 'find' : 'filter']('input, textarea, select').nodes, function(el) {
 
-                if (el.type === 'radio' || el.type === 'checkbox') {
+                if (el.disabled) {
+
+                    return null;
+
+                } if (el.type === 'radio' || el.type === 'checkbox') {
 
                     return el.checked ? {name: el.name, value: el.value} : null;
 
