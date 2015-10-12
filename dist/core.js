@@ -60,7 +60,7 @@ el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelecto
 
         get: function(index) {
 
-            return this.nodes[index];
+            return typeof index !== 'undefined' ? this.nodes[index] : this.nodes;
 
         },
 
