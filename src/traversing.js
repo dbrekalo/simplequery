@@ -16,6 +16,20 @@ requires browser features:
 
         },
 
+        children: function(selector) {
+
+            var nodes = [];
+
+            this.each(function() {
+
+                nodes = Array.prototype.concat(nodes, $.slice(this.children));
+
+            });
+
+            return selector ? new $(nodes).filter(selector) : new $(nodes);
+
+        },
+
         closest: function(selector) {
 
             return $($.map(this.nodes, function(el) {
