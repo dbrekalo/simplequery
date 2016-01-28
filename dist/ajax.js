@@ -10,7 +10,10 @@ requires browser features: 'XMLHttpRequest' in window
             url: '',
             method: 'GET',
             data: null,
-            dataType: 'html'
+            dataType: 'html',
+            xhrFields: {
+                withCredentials: false
+            }
         },
 
         ajax = function(options) {
@@ -34,6 +37,8 @@ requires browser features: 'XMLHttpRequest' in window
             }
 
             request.open(options.method, options.url, true);
+
+            request.withCredentials = options.xhrFields.withCredentials;
 
             options.method === 'POST' && request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
