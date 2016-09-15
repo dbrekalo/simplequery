@@ -42,6 +42,13 @@ Deferred module
 
         },
 
+        always: function(callback) {
+
+            this.done(callback).fail(callback);
+            return this;
+
+        },
+
         resolve: function() {
 
             finalize.call(this, 'resolve', $.slice(arguments));
@@ -94,6 +101,50 @@ Deferred module
             });
 
             return whenDeferred;
+
+        },
+
+        whenAlways: function() {
+
+            var deferreds = $.slice(arguments),
+                whenAllDeferred = $.Deferred(),
+
+                checkDeferreds = function() {
+
+                    var pendingDeferreds = deferreds.length,
+                        args = [];
+
+                    $.each(deferreds, function(i, deferred) {
+
+                        if (deferred instanceof Deferred) {
+
+                            if (deferred.finalized) {
+
+                                pendingDeferreds--;
+
+                                deferred.doneWith && args.push(deferred.doneWith.length == 1 ? deferred.doneWith[0] : deferred.doneWith);
+
+                                deferred.failedWith && args.push(deferred.failedWith.length == 1 ? deferred.failedWith[0] : deferred.failedWith);
+
+                            }
+
+                        } else {
+                            args.push(deferred);
+                        }
+
+                    });
+
+                    !pendingDeferreds && whenAllDeferred.resolve(args);
+
+                };
+
+            $.each(deferreds, function(i, deferred) {
+
+                deferred instanceof Deferred && deferred.always(checkDeferreds);
+
+            });
+
+            return whenAllDeferred;
 
         }
 
