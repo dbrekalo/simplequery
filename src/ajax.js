@@ -9,6 +9,7 @@ requires browser features: 'XMLHttpRequest' in window
     var ajaxDefaults = {
             url: '',
             method: 'GET',
+            contentType: 'application/x-www-form-urlencoded',
             data: null,
             dataType: 'html',
             xhrFields: {
@@ -20,7 +21,9 @@ requires browser features: 'XMLHttpRequest' in window
 
             options = $.extend({}, ajaxDefaults, options);
 
-            options.data && (options.data = $.param(options.data));
+            if (options.data) {
+                options.data = (options.contentType === 'application/json') ? JSON.stringify(options.data) : $.param(options.data);
+            }
 
             var request = new XMLHttpRequest(),
                 deferred = $.Deferred ? $.Deferred() : false,
@@ -40,7 +43,7 @@ requires browser features: 'XMLHttpRequest' in window
 
             request.withCredentials = options.xhrFields.withCredentials;
 
-            options.method === 'POST' && request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            options.method === 'POST' && request.setRequestHeader('Content-type', options.contentType);
 
             request.onload = function() {
 
