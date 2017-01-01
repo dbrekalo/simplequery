@@ -22,7 +22,11 @@ requires browser features: 'XMLHttpRequest' in window
             options = $.extend({}, ajaxDefaults, options);
 
             if (options.data) {
-                options.data = (options.contentType === 'application/json') ? JSON.stringify(options.data) : $.param(options.data);
+                var isJSON = options.contentType.indexOf('json') > -1;
+
+                if (!isJSON) {
+                    options.data = $.param(options.data);
+                }
             }
 
             var request = new XMLHttpRequest(),
