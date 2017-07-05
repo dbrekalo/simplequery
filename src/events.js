@@ -4,7 +4,10 @@ Events module
 requires browser features: 'addEventListener' in el, 'removeEventListener' in el
 --------------------------------------------------------------*/
 
-simpleQuery.fn.extend({
+var $ = require('./core');
+require('./traversing');
+
+$.fn.extend({
 
     on: function(eventType, selector, handler) {
 
@@ -12,9 +15,7 @@ simpleQuery.fn.extend({
             $collection = handler ? this.find(selector) : this;
 
         $collection.each(function(i, el) {
-
             el.addEventListener(eventType.split('.')[0], eventHandler, false);
-
         });
 
         return this;
@@ -27,9 +28,7 @@ simpleQuery.fn.extend({
             $collection = handler ? this.find(selector) : this;
 
         $collection.each(function(i, el) {
-
             el.removeEventListener(eventType.split('.')[0], eventHandler, false);
-
         });
 
         return this;
@@ -37,3 +36,5 @@ simpleQuery.fn.extend({
     }
 
 });
+
+module.exports = $;

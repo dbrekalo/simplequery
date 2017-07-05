@@ -1,8 +1,9 @@
 /*--------------------------------------------------------------
 Attributes module
 --------------------------------------------------------------*/
+var $ = require('./core');
 
-simpleQuery.fn.extend({
+$.fn.extend({
 
     attr: function(name, value) {
 
@@ -34,3 +35,5 @@ simpleQuery.fn.extend({
     }
 
 });
+
+module.exports = $;

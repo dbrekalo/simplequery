@@ -2,101 +2,151 @@
 Deferred module
 --------------------------------------------------------------*/
 
-(function($) {
+var $ = require('./core');
 
-    function Deferred() {
+function Deferred() {
 
-        this.onDone = [];
-        this.onFail = [];
+    this.currentState = 'pending';
+    this.onDone = [];
+    this.onFail = [];
+
+}
+
+function settle(method, args) {
+
+    if (this.currentState === 'pending') {
+
+        this.currentState = method === 'resolve' ? 'resolved' : 'rejected';
+
+        this[method === 'resolve' ? 'doneWith' : 'failedWith'] = args;
+
+        $.each(this[method === 'resolve' ? 'onDone' : 'onFail'], function(i, callback) {
+            callback.apply(this, args);
+        });
 
     }
 
-    function finalize(method, args) {
+    return this;
 
-        if (!this.finalized) {
+}
 
-            this.finalized = true;
-            this[method === 'resolve' ? 'doneWith' : 'failedWith' ] = args;
+Deferred.prototype = {
 
-            $.each(this[method === 'resolve' ? 'onDone' : 'onFail' ], function(i, callback) {
-                callback.apply(this, args);
-            });
+    state: function() {
 
-        }
+        return this.currentState;
+
+    },
+
+    then: function(done, fail) {
+
+        done && this.done(done);
+        fail && this.fail(fail);
+        return this;
+
+    },
+
+    always: function(callback) {
+
+        return this.then(callback, callback);
+
+    },
+
+    done: function(callback) {
+
+        this.doneWith ? callback.apply(this, this.doneWith) : this.onDone.push(callback);
+        return this;
+
+    },
+
+    fail: function(callback) {
+
+        this.failedWith ? callback.apply(this, this.failedWith) : this.onFail.push(callback);
+        return this;
+
+    },
+
+    resolve: function() {
+
+        return settle.call(this, 'resolve', $.slice(arguments));
+
+    },
+
+    reject: function() {
+
+        return settle.call(this, 'reject', $.slice(arguments));
 
     }
 
-    Deferred.prototype = {
+};
 
-        done: function(callback) {
+$.extend($, {
 
-            this.doneWith ? callback.apply(this, this.doneWith) : this.onDone.push(callback);
-            return this;
+    Deferred: function() {
 
-        },
+        return new Deferred();
 
-        fail: function(callback) {
+    },
 
-            this.failedWith ? callback.apply(this, this.failedWith) : this.onFail.push(callback);
-            return this;
+    when: function() {
 
-        },
+        var deferreds = $.slice(arguments);
+        var whenDeferred = $.Deferred();
 
-        resolve: function() {
+        var checkDeferreds = function() {
 
-            finalize.call(this, 'resolve', $.slice(arguments));
-
-        },
-
-        reject: function() {
-
-            finalize.call(this, 'reject', $.slice(arguments));
-
-        }
-
-    };
-
-    $.extend($, {
-
-        Deferred: function(options) {
-
-            return new Deferred();
-
-        },
-
-        when: function() {
-
-            var deferreds = $.slice(arguments),
-                whenDeferred = $.Deferred(),
-
-                checkDeferreds = function() {
-
-                    var args = [];
-
-                    $.each(deferreds, function(i, deferred) {
-
-                        if (deferred instanceof Deferred) {
-                            deferred.doneWith && args.push(deferred.doneWith.length == 1 ? deferred.doneWith[0] : deferred.doneWith);
-                        } else {
-                            args.push(deferred);
-                        }
-
-                    });
-
-                    args.length === deferreds.length && whenDeferred.resolve(args);
-
-                };
+            var resolvedArgs = [];
+            var rejectedArgs;
 
             $.each(deferreds, function(i, deferred) {
 
-                deferred instanceof Deferred && deferred.done(checkDeferreds);
+                if (deferred instanceof Deferred) {
+
+                    if (deferred.state() === 'resolved') {
+
+                        resolvedArgs.push(deferred.doneWith);
+
+                    } else if (deferred.state() === 'rejected') {
+
+                        rejectedArgs = deferred.failedWith;
+                        return false;
+
+                    }
+
+                } else {
+                    resolvedArgs.push([deferred]);
+                }
 
             });
 
-            return whenDeferred;
+            if (rejectedArgs) {
+                settle.call(whenDeferred, 'reject', rejectedArgs);
+            }
 
-        }
+            if (resolvedArgs.length === deferreds.length) {
 
-    });
+                resolvedArgs = deferreds.length === 1 ? resolvedArgs[0] : $.map(resolvedArgs, function(args) {
+                    return args.length === 1 ? args[0] : args;
+                });
 
-})(window.simpleQuery);
+                settle.call(whenDeferred, 'resolve', resolvedArgs);
+
+            }
+
+        };
+
+        $.each(deferreds, function(i, deferred) {
+
+            deferred instanceof Deferred && deferred.always(checkDeferreds);
+
+        });
+
+        checkDeferreds();
+
+        return whenDeferred;
+
+    }
+
+});
+
+module.exports = $;

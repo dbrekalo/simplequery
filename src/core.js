@@ -3,204 +3,182 @@ Core module
 
 requires browser features:
 'querySelectorAll' in el
+'isArray' in Array
 el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector
 --------------------------------------------------------------*/
 
-;(function(window) {
+function $(selector) {
 
-    function $(selector) {
+    return selector instanceof $ ? selector : this instanceof $ ? this.init(selector) : new $(selector);
 
-        return selector instanceof $ ? selector : this instanceof $ ? this.init(selector) : new $(selector);
+}
+
+var api = {
+
+    init: function(selector) {
+
+        var nodes = [];
+
+        if ($.isArray(selector)) {
+
+            nodes = selector;
+
+        } else if (typeof selector === 'object') {
+
+            nodes = [selector];
+
+        } else if (typeof selector === 'string') {
+
+            selector = $.trim(selector);
+            nodes = selector[0] === '<' ? $.parseHtml(selector) : $.queryNodes(selector);
+
+        }
+
+        this.nodes = nodes;
+        this.length = nodes.length;
+
+    },
+
+    each: function(callback) {
+
+        for (var i = 0; i < this.length; i++) {
+            if (callback.call(this.nodes[i], i, this.nodes[i]) === false) {
+                break;
+            }
+        }
+
+        return this;
+
+    },
+
+    eq: function(index) {
+
+        return new $(this.get(index));
+
+    },
+
+    get: function(index) {
+
+        return typeof index !== 'undefined' ? this.nodes[index] : this.nodes;
+
+    },
+
+    is: function(selector) {
+
+        return selector instanceof $ ? this.nodes[0] === selector.nodes[0] : $.matches(this.nodes[0], selector);
+
+    },
+
+    extend: function(plugins) {
+
+        $.extend(api, plugins);
 
     }
 
-    var api = {
+};
 
-        init: function(selector) {
+var utils = {
 
-            var nodes = [];
+    isArray: Array.isArray,
 
-            if ($.isArray(selector)) {
+    each: function(collection, callback) {
 
-                nodes = selector;
+        if ($.isArray(collection)) {
 
-            } else if (typeof selector === 'object') {
-
-                nodes = [selector];
-
-            } else if (typeof selector === 'string') {
-
-                selector = $.trim(selector);
-                nodes = selector[0] === '<' ? $.parseHtml(selector) : $.queryNodes(selector);
-
+            for (var i = 0; i < collection.length; i++) {
+                if (callback(i, collection[i]) === false) { break; }
             }
 
-            this.nodes = nodes;
-            this.length = nodes.length;
+        } else {
 
-        },
-
-        each: function(callback) {
-
-            for (var i = 0; i < this.length; i++) {
-                if (callback.call(this.nodes[i], i, this.nodes[i]) === false) {
-                    break;
-                }
+            for (var key in collection) {
+                if (callback(key, collection[key]) === false) { break; }
             }
-
-            return this;
-
-        },
-
-        eq: function(index) {
-
-            return new $(this.get(index));
-
-        },
-
-        get: function(index) {
-
-            return typeof index !== 'undefined' ? this.nodes[index] : this.nodes;
-
-        },
-
-        is: function(selector) {
-
-            return selector instanceof $ ? this.nodes[0] === selector.nodes[0] : $.matches(this.nodes[0], selector);
-
-        },
-
-        find: function(selector) {
-
-            var nodes = [];
-
-            this.each(function() {
-
-                nodes = Array.prototype.concat(nodes, $.queryNodes(selector, this));
-
-            });
-
-            return new $(nodes);
-
-        },
-
-        extend: function(plugins) {
-
-            $.extend(api, plugins);
 
         }
 
-    };
+    },
 
-    var utils = {
+    extend: function(out) {
 
-        isArray: Array.isArray || function(object) {
+        out === true && (out = {});
 
-            return object instanceof Array;
+        for (var i = 1; i < arguments.length; i++) {
 
-        },
-
-        each: function(collection, callback) {
-
-            if ($.isArray(collection)) {
-
-                for (var i = 0; i < collection.length; i++) {
-                    if (callback(i, collection[i]) === false) { break; }
-                }
-
-            } else {
-
-                for (var key in collection) {
-                    if (callback(key, collection[key]) === false) { break; }
-                }
-
+            for (var key in arguments[i]) {
+                arguments[i].hasOwnProperty(key) && (out[key] = arguments[i][key]);
             }
-
-        },
-
-        extend: function(out) {
-
-            out = out || {};
-            out === true && (out = {});
-
-            for (var i = 1; i < arguments.length; i++) {
-
-                for (var key in arguments[i]) {
-                    arguments[i].hasOwnProperty(key) && (out[key] = arguments[i][key]);
-                }
-
-            }
-
-            return out;
-
-        },
-
-        parseHtml: function(html) {
-
-            var div = document.createElement('div');
-            div.innerHTML = html;
-
-            return $.slice(div.childNodes);
-
-        },
-
-        queryNodes: function(selector, context) {
-
-            context = context || document;
-            return context.querySelectorAll ? $.slice(context.querySelectorAll(selector)) : [];
-
-        },
-
-        matches: function(el, selector) {
-
-            return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
-
-        },
-
-        trim: function(string) {
-
-            return string.trim();
-
-        },
-
-        map: function(collection, callback) {
-
-            var temp = [],
-
-                iterator = function(value, key) {
-                    var result = callback(value, key);
-                    typeof result !== 'undefined' && result !== null && temp.push(result);
-                };
-
-            if ($.isArray(collection)) {
-
-                for (var i = 0; i < collection.length; i++) {
-                    iterator(collection[i], i);
-                }
-
-            } else {
-
-                for (var key in collection) {
-                    iterator(collection[key], key);
-                }
-
-            }
-
-            return temp;
-
-        },
-
-        slice: function(obj, start, end) {
-
-            return Array.prototype.slice.call(obj, start, end);
 
         }
 
-    };
+        return out;
 
-    $.prototype = $.fn = api;
-    utils.extend($, utils);
+    },
 
-    window.simpleQuery = $;
+    parseHtml: function(html) {
 
-})(window);
+        var div = document.createElement('div');
+        div.innerHTML = html;
+
+        return $.slice(div.childNodes);
+
+    },
+
+    queryNodes: function(selector, context) {
+
+        context = context || document;
+        return context.querySelectorAll ? $.slice(context.querySelectorAll(selector)) : [];
+
+    },
+
+    matches: function(el, selector) {
+
+        return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector).call(el, selector);
+
+    },
+
+    trim: function(string) {
+
+        return string.trim();
+
+    },
+
+    map: function(collection, callback) {
+
+        var temp = [],
+
+            iterator = function(value, key) {
+                var result = callback(value, key);
+                typeof result !== 'undefined' && result !== null && temp.push(result);
+            };
+
+        if ($.isArray(collection)) {
+
+            for (var i = 0; i < collection.length; i++) {
+                iterator(collection[i], i);
+            }
+
+        } else {
+
+            for (var key in collection) {
+                iterator(collection[key], key);
+            }
+
+        }
+
+        return temp;
+
+    },
+
+    slice: function(obj, start, end) {
+
+        return Array.prototype.slice.call(obj, start, end);
+
+    }
+
+};
+
+$.prototype = $.fn = api;
+utils.extend($, utils);
+
+module.exports = $;

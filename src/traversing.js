@@ -4,93 +4,114 @@ Traversing module
 requires browser features:
 --------------------------------------------------------------*/
 
-;(function($) {
+var $ = require('./core');
 
-    $.fn.extend({
+$.fn.extend({
 
-        parent: function() {
+    find: function(selector) {
 
-            return $($.map(this.nodes, function(el) {
-                return el.parentNode;
-            }));
+        var nodes = [];
 
-        },
+        this.each(function() {
+            nodes = Array.prototype.concat(nodes, $.queryNodes(selector, this));
+        });
 
-        children: function(selector) {
+        return new $(nodes);
 
-            var nodes = [];
+    },
 
-            this.each(function() {
+    parent: function() {
 
-                nodes = Array.prototype.concat(nodes, $.slice(this.children));
+        return $($.map(this.nodes, function(el) {
+            return el.parentNode;
+        }));
 
-            });
+    },
 
-            return selector ? new $(nodes).filter(selector) : new $(nodes);
+    children: function(selector) {
 
-        },
+        var nodes = [];
 
-        closest: function(selector) {
+        this.each(function() {
 
-            return $($.map(this.nodes, function(el) {
+            nodes = Array.prototype.concat(nodes, $.slice(this.children));
 
-                var foundNode;
+        });
 
-                while (el.nodeType === 1) {
+        return selector ? new $(nodes).filter(selector) : new $(nodes);
 
-                    if ($.matches(el, selector)) {
-                        foundNode = el;
-                        break;
-                    } else {
-                        el = el.parentNode;
-                    }
+    },
 
+    closest: function(selector) {
+
+        return $($.map(this.nodes, function(el) {
+
+            var foundNode;
+
+            while (el.nodeType === 1) {
+
+                if ($.matches(el, selector)) {
+                    foundNode = el;
+                    break;
+                } else {
+                    el = el.parentNode;
                 }
 
-                return foundNode;
+            }
 
-            }));
+            return foundNode;
 
-        },
+        }));
 
-        filter: function(selector) {
+    },
 
-            return $($.map(this.nodes, function(el) {
+    filter: function(selector) {
 
-                return $.matches(el, selector) ? el : null;
+        return $($.map(this.nodes, function(el) {
 
-            }));
+            return $.matches(el, selector) ? el : null;
 
-        },
+        }));
 
-        index: function(node) {
+    },
 
-            var index = -1;
+    index: function(node) {
+
+        var index = node ? -1 : 0;
+        var el = this.get(0);
+
+        if (node) {
 
             node instanceof $ && (node = node.get(0));
 
             this.each(function(i, el) {
-
                 el === node && (index = i);
-
             });
 
-            return index;
+        } else {
 
-        },
-
-        first: function() {
-
-            return this.eq(0);
-
-        },
-
-        last: function() {
-
-            return this.eq(this.length - 1);
+            while ((el = el.previousElementSibling)) {
+                index++;
+            }
 
         }
 
-    });
+        return index;
 
-})(window.simpleQuery);
+    },
+
+    first: function() {
+
+        return this.eq(0);
+
+    },
+
+    last: function() {
+
+        return this.eq(this.length - 1);
+
+    }
+
+});
+
+module.exports = $;

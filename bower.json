@@ -1,18 +1,17 @@
 {
   "name": "simplequery",
-  "version": "1.1.1",
+  "version": "2.0.0-beta1",
   "homepage": "https://github.com/dbrekalo/simplequery",
+  "description": "Lightweight implementation of jQuery api subset",
   "authors": [
     "Damir Brekalo <dbrekalo@gmail.com>"
   ],
-  "description": "javascript library with api similar to jQuery",
-  "main": "dist/core.js",
+  "description": "Javascript library with api similar to jQuery",
+  "main": "src/core.js",
   "keywords": [
-    "js",
-    "simple",
-    "query",
-    "simplequery",
-    "jquery"
+    "jQuery",
+    "SimpleQuery"
+    "simple-query"
   ],
   "license": "MIT",
   "ignore": [

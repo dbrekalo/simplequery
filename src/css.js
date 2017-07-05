@@ -4,7 +4,9 @@ Css module
 requires browser features: 'getComputedStyle' in window
 --------------------------------------------------------------*/
 
-simpleQuery.fn.extend({
+var $ = require('./core');
+
+$.fn.extend({
 
     css: function(rule, value) {
 
@@ -17,3 +19,5 @@ simpleQuery.fn.extend({
     }
 
 });
+
+module.exports = $;
