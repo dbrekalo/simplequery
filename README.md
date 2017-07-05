@@ -48,7 +48,7 @@ $.get('/test-html').done(function(html) {
 ```
 ---
 
-[Full set of examples is available in tests codebase](https://github.com/dbrekalo/simplequery/tree/master/tests)
+[Full set of examples is available in tests codebase](https://github.com/dbrekalo/simplequery/tree/master/test)
 where you see what can and cannot be done with SimpleQuery api.
 
 ## Modules
