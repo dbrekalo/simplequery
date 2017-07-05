@@ -54,7 +54,7 @@ describe('SimpleQuery constructor', function() {
 
     it('creates elements in memory', function() {
 
-        assert.instanceOf($('<div><span>Test</span></div>').get(0), HTMLElement);
+        assert.isDefined($('<div><span>Test</span></div>').get(0).nodeName);
 
     });
 
@@ -69,7 +69,7 @@ describe('SimpleQuery core api', function() {
         $('.entryInput').each(function(i, el) {
 
             assert.equal(i, counter);
-            assert.instanceOf(el, HTMLElement);
+            assert.isDefined(el.nodeName);
             assert.strictEqual(this, el);
 
             counter++;
