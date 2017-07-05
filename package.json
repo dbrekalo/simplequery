@@ -1,6 +1,6 @@
 {
   "name": "simple-query",
-  "version": "2.0.0-beta2",
+  "version": "2.0.0-beta3",
   "description": "Lightweight implementation of jQuery api subset",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
   },
   "keywords": [
     "jQuery",
-    "SimpleQuery"
+    "SimpleQuery",
     "simple-query"
   ],
   "devDependencies": {

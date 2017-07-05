@@ -1,6 +1,6 @@
 {
   "name": "simplequery",
-  "version": "2.0.0-beta2",
+  "version": "2.0.0-beta3",
   "homepage": "https://github.com/dbrekalo/simplequery",
   "description": "Lightweight implementation of jQuery api subset",
   "authors": [
