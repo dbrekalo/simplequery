@@ -51,6 +51,14 @@ var api = {
 
     },
 
+    map: function(callback) {
+
+        return new $($.map(this.nodes, function(el, i) {
+            return callback.call(el, i, el);
+        }));
+
+    },
+
     eq: function(index) {
 
         return new $(this.get(index));

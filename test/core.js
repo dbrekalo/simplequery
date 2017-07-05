@@ -78,6 +78,23 @@ describe('SimpleQuery core api', function() {
 
     });
 
+    it('"map" creates new instance via function return values', function() {
+
+        assert.equal($('.entryInput').map(function(i, el) {
+            return this;
+        }).length, 2);
+
+        assert.deepEqual($('.entryInput').map(function(i, el) {
+            assert.strictEqual(this, el);
+            return i;
+        }).get(), [0, 1]);
+
+        assert.deepEqual($('.entryInput').map(function(i, el) {
+            return i === 0 ? i : undefined;
+        }).get(), [0]);
+
+    });
+
     it('"each" loop can be broken when returning false', function() {
 
         var counter = 0;
