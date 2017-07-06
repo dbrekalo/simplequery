@@ -23,14 +23,14 @@ var api = {
 
             nodes = selector;
 
-        } else if (typeof selector === 'object') {
-
-            nodes = [selector];
-
         } else if (typeof selector === 'string') {
 
             selector = $.trim(selector);
             nodes = selector[0] === '<' ? $.parseHtml(selector) : $.queryNodes(selector);
+
+        } else {
+
+            nodes = [selector];
 
         }
 
