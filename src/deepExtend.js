@@ -3,7 +3,6 @@ Deep extend module
 --------------------------------------------------------------*/
 
 var $ = require('./core');
-
 var shallowExtend = $.extend;
 
 function deepExtend(out) {
@@ -23,6 +22,8 @@ function deepExtend(out) {
                 } else {
                     out[key] = obj[key];
                 }
+            } else {
+                continue;
             }
         }
 
@@ -34,7 +35,7 @@ function deepExtend(out) {
 
 $.extend = function() {
 
-    return typeof arguments[0] === 'boolean' ? deepExtend.apply(window, $.slice(arguments, 1)) : shallowExtend.apply(window, arguments);
+    return arguments[0] === true ? deepExtend.apply(window, $.slice(arguments, 1)) : shallowExtend.apply(window, arguments);
 
 };
 
