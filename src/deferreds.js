@@ -14,13 +14,15 @@ function Deferred() {
 
 function settle(method, args) {
 
+    var settleViaResolve = method === 'resolve';
+
     if (this.currentState === 'pending') {
 
-        this.currentState = method === 'resolve' ? 'resolved' : 'rejected';
+        this.currentState = settleViaResolve ? 'resolved' : 'rejected';
 
-        this[method === 'resolve' ? 'doneWith' : 'failedWith'] = args;
+        this[settleViaResolve ? 'doneWith' : 'failedWith'] = args;
 
-        $.each(this[method === 'resolve' ? 'onDone' : 'onFail'], function(i, callback) {
+        $.each(this[settleViaResolve ? 'onDone' : 'onFail'], function(i, callback) {
             callback.apply(this, args);
         });
 
