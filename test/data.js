@@ -1,6 +1,8 @@
 var assert = require('chai').assert;
 var $ = require('../src/data');
 
+require('../src/utils');
+
 describe('Data', function() {
 
     var $element1;
@@ -9,17 +11,17 @@ describe('Data', function() {
     beforeEach(function() {
 
         document.body.innerHTML =
-            '<div class="first" data-id="test", data-order="3"></div>' +
-            '<div class="second"></div>';
+            '<div data-id="test", data-order="3"></div>' +
+            '<div></div>';
 
-        $element1 = $('.first');
-        $element2 = $('.second');
+        $element1 = $('div').eq(0);
+        $element2 = $('div').eq(1);
 
     });
 
     it('gets element data properties', function() {
 
-        assert.deepEqual($element1.data(), {id: 'test', order: '3'});
+        assert.deepEqual($element1.data(), {id: 'test', order: 3});
         assert.equal($element1.data('id'), 'test');
 
         assert.deepEqual($element2.data(), {});
@@ -30,7 +32,7 @@ describe('Data', function() {
 
         $element1.data('foo', 'bar');
         assert.equal($element1.data('foo'), 'bar');
-        assert.deepEqual($element1.data(), {id: 'test', order: '3', foo: 'bar'});
+        assert.deepEqual($element1.data(), {id: 'test', order: 3, foo: 'bar'});
 
         $element2.data('foo', 'bar').data('ref-id', true);
         assert.deepEqual($element2.data(), {foo: 'bar', refId: true});

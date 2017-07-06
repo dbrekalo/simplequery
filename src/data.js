@@ -12,7 +12,7 @@ var elDataStore = {},
 
         return str.replace(/-+(.)?/g, function(match, chr) {
 
-            return chr ? chr.toUpperCase() : '';
+            return chr.toUpperCase();
 
         });
 
@@ -46,10 +46,10 @@ var elDataStore = {},
 
         var data = {};
 
-        $.each(el.attributes || [], function(i, attr) {
+        $.each(el.attributes, function(i, attr) {
 
             if (attr && attr.name && attr.name.indexOf('data-') === 0) {
-                data[camelize(attr.name.replace('data-', ''))] = attr.value;
+                data[camelize(attr.name.replace('data-', ''))] = $.isNumeric(attr.value) ? parseFloat(attr.value) : attr.value;
             }
 
         });
