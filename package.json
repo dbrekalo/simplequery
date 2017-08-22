@@ -32,7 +32,7 @@
     "grunt-cli": "^1.2.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^20.0.0",
-    "istanbul-instrumenter-loader": "^2.0.0",
+    "istanbul-instrumenter-loader": "^3.0.0",
     "jquery": "^3.2.1",
     "karma": "^1.4.1",
     "karma-chrome-launcher": "^2.0.0",
@@ -41,11 +41,11 @@
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.31",
-    "karma-webpack": "^2.0.2",
+    "karma-webpack": "^2.0.4",
     "load-grunt-tasks": "^3.5.2",
-    "mocha": "^3.2.0",
+    "mocha": "^3.5.0",
     "mocha-loader": "^1.1.0",
-    "pretender": "^1.4.2",
-    "webpack": "^2.2.1"
+    "pretender": "~1.4.2",
+    "webpack": "^3.5.5"
   }
 }
