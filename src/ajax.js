@@ -11,6 +11,7 @@ var ajaxDefaults = {
     url: '',
     method: 'GET',
     data: null,
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     dataType: 'html',
     xhrFields: {
         withCredentials: false
@@ -19,8 +20,11 @@ var ajaxDefaults = {
 
 function ajax(options) {
 
-    options.data = options.data && $.param(options.data);
     options = $.extend({}, ajaxDefaults, options);
+
+    if (options.data && typeof options.data !== 'string') {
+        options.data = $.param(options.data);
+    }
 
     var request = new XMLHttpRequest();
     var deferred = $.Deferred();
@@ -48,10 +52,7 @@ function ajax(options) {
     request.open(options.method, options.url, true);
 
     request.withCredentials = options.xhrFields && options.xhrFields.withCredentials;
-
-    if (options.method === 'POST') {
-        request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    }
+    request.setRequestHeader('Content-type', options.contentType);
 
     request.onload = function() {
 
