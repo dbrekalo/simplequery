@@ -53,7 +53,7 @@ requires browser features: 'XMLHttpRequest' in window
 
                 if (request.status >= 200 && request.status < 400) {
 
-                    var args = [request.getResponseHeader('content-type').indexOf('json') > -1 ? JSON.parse(request.response) : request.response, request.status, request];
+                    var args = [request.status !== 204 && request.getResponseHeader('content-type').indexOf('json') > -1 ? JSON.parse(request.response) : request.response, request.status, request];
 
                     options.dataType === 'script' && window['ev' + 'al'].call(window, $.trim(request.response));
 
