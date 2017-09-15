@@ -56,7 +56,7 @@ function ajax(options) {
 
     request.onload = function() {
 
-        var contentType = request.getResponseHeader('content-type');
+        var contentType = request.status === 204 ? '' : request.getResponseHeader('content-type');
         var responseText = request.responseText;
 
         if (request.status >= 200 && request.status < 400) {
