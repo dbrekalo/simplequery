@@ -30,6 +30,10 @@ describe('Ajax', function() {
                 return [200, {'Content-Type': 'application/html'}, request.requestBody];
             });
 
+            this.post('/post-no-content-test', function(request) {
+                return [204, {}, ''];
+            });
+
         });
 
     });
@@ -73,6 +77,15 @@ describe('Ajax', function() {
 
         $.post('/post-test', {foo: 'bar'}).then(function(data) {
             assert.equal(data, 'foo=bar');
+            done();
+        });
+
+    });
+
+    it('"post" can send data and recieve a response without a "Content-Type" header', function(done) {
+
+        $.post('/post-no-content-test', {foo: 'bar'}, function(data) {
+            assert.equal(data, '');
             done();
         });
 
