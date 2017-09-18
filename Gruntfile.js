@@ -23,7 +23,7 @@ module.exports = function(grunt) {
             jsFiles: {
                 expand: true,
                 files: ['src/**/*.js'],
-                tasks: ['eslint', 'uglify'],
+                tasks: ['eslint'],
                 options: {
                     spawn: false
                 }
