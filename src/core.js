@@ -61,7 +61,7 @@ var api = {
 
     eq: function(index) {
 
-        return new $(this.get(index));
+        return new $(this.get(index) || []);
 
     },
 

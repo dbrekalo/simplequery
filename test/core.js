@@ -116,6 +116,7 @@ describe('SimpleQuery core api', function() {
     it('"eq" returns new SimpleQuery instance for element at certain position', function() {
 
         assert.equal($('.entryInput').eq(0).length, 1);
+        assert.equal($('.entryInput').eq(99).length, 0);
 
     });
 
